@@ -179,7 +179,7 @@ const server = http.createServer(async (req, res) => {
 
           const { outMp4, durationSec } = await makeVideo({ workDir, scriptObj });
           const assetKey = `finishflow/${new Date().toISOString().slice(0, 10)}/${nanoid(12)}.mp4`;
-          const download_url = await uploadToR2(outMp4, assetKey);
+          const download_url = "local-file-created.mp4";
 
           return json(res, 200, { ok: true, download_url, asset_key: assetKey, durationSec });
         } catch (e) {
@@ -202,3 +202,4 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log(`[worker] listening on :${PORT}`);
 });
+
