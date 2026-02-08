@@ -1,6 +1,9 @@
 FROM node:18-alpine
 
-RUN apk add --no-cache ffmpeg
+RUN apk add --no-cache \
+    ffmpeg \
+    fontconfig \
+    ttf-dejavu
 
 WORKDIR /app
 COPY package.json package-lock.json* ./
