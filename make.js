@@ -1,20 +1,46 @@
-// make.js
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
 
-console.log("FinishFlow Worker started");
+const app = express();
+app.use(express.json({ limit: "10mb" }));
 
-(async () => {
+const PORT = process.env.PORT || 10000;
+
+app.get("/", (req, res) => {
+  res.send("finishflow-worker running");
+});
+
+app.get("/health", (req, res) => {
+  res.json({ ok: true });
+});
+
+/*
+ /render
+ live 서버가 호출하는 엔드포인트
+ 실제 영상 대신 테스트용 download_url 반환
+*/
+app.post("/render", async (req, res) => {
   try {
-    // ✅ 실제 작업 로직 자리
-    console.log("FinishFlow Worker job done");
+    console.log("[worker] render request received");
 
-    // ✅ Render UI가 'exited early'로 오인하는 케이스 방지용
-    await sleep(3000);
+    // 실제 영상 생성 대신 테스트용 URL
+    const fakeUrl = "https://example.com/video.mp4";
 
-    process.exitCode = 0; // 성공 명시
-  } catch (err) {
-    console.error("Worker error:", err);
-    await sleep(3000);
-    process.exitCode = 1; // 실패 명시
+    return res.json({
+      ok: true,
+      download_url: fakeUrl
+    });
+
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      ok: false,
+      error: "render failed"
+    });
   }
-})();
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("FinishFlow Worker running on port", PORT);
+});
