@@ -1,6 +1,4 @@
 const express = require("express");
-const fs = require("fs");
-const path = require("path");
 
 const app = express();
 app.use(express.json({ limit: "10mb" }));
@@ -15,32 +13,25 @@ app.get("/health", (req, res) => {
   res.json({ ok: true });
 });
 
-/*
- /render
- live 서버가 호출하는 엔드포인트
- 실제 영상 대신 테스트용 download_url 반환
-*/
+// live가 호출하는 엔드포인트
 app.post("/render", async (req, res) => {
   try {
-    console.log("[worker] render request received");
+    console.log("[worker] /render called");
 
-    // 실제 영상 생성 대신 테스트용 URL
+    // TODO: 여기에 실제 렌더 로직(ffmpeg 등) 연결
+    // 지금은 연결 검증용으로 fake URL 반환
     const fakeUrl = "https://example.com/video.mp4";
 
     return res.json({
       ok: true,
       download_url: fakeUrl
     });
-
   } catch (e) {
-    console.log(e);
-    return res.status(500).json({
-      ok: false,
-      error: "render failed"
-    });
+    console.log("[worker] render error:", e);
+    return res.status(500).json({ ok: false, error: "render failed" });
   }
 });
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log("FinishFlow Worker running on port", PORT);
+  console.log(`[worker] listening on ${PORT}`);
 });
