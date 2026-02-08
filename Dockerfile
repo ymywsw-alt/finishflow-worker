@@ -1,8 +1,9 @@
-FROM node:22-slim
+FROM node:18-alpine
+
+RUN apk add --no-cache ffmpeg
 
 WORKDIR /app
-
-COPY package*.json ./
+COPY package.json package-lock.json* ./
 RUN npm install --omit=dev
 
 COPY . .
